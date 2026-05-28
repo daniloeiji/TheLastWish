@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Last Wish — Final Message</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #E63329;
+    --red-dark: #C0271E;
+    --ink: #2b2b2b;
+    --muted: #5a5a5a;
+    --line: #e6e6e6;
+    --bg: #ffffff;
+    --footer: #0b0b0b;
+    --link: #6b4cd6;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; -webkit-font-smoothing: antialiased; }
+  .page { min-height: 100vh; display: flex; flex-direction: column; }
+  .container { width: 100%; max-width: 880px; margin: 0 auto; padding: 36px 24px 48px; }
+
+  .headline {
+    color: var(--red);
+    font-size: 30px;
+    line-height: 1.25;
+    font-weight: 700;
+    text-align: center;
+    text-wrap: balance;
+    margin: 8px 0 18px;
+    letter-spacing: -0.01em;
+  }
+  .headline u { text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 2px; }
+
+  .subhead {
+    text-align: center;
+    font-weight: 700;
+    font-size: 20px;
+    color: #1a1a1a;
+    margin: 0 0 22px;
+  }
+  .subhead .arrow { display: inline-block; transform: translateY(2px); }
+
+  /* Video embed slot */
+  .video-embed {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/10;
+    background: #0e0e0e;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.04);
+  }
+  .video-embed iframe,
+  .video-embed video,
+  .video-embed > div:not(.embed-placeholder) {
+    position: absolute; inset: 0; width: 100%; height: 100%; border: 0;
+  }
+  .embed-placeholder {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 10px;
+    color: #8a8a8a;
+    background:
+      repeating-linear-gradient(135deg, #131313 0 12px, #181818 12px 24px);
+    font-family: 'Inter', sans-serif;
+    text-align: center;
+    padding: 24px;
+  }
+  .embed-placeholder .ph-icon {
+    width: 64px; height: 64px; border-radius: 50%;
+    background: rgba(230, 51, 41, 0.18); color: var(--red);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px; padding-left: 4px;
+    border: 1px solid rgba(230, 51, 41, 0.45);
+  }
+  .embed-placeholder .ph-text { font-size: 14px; font-weight: 600; color: #cfcfcf; letter-spacing: 0.02em; }
+  .embed-placeholder .ph-sub { font-size: 12px; color: #6e6e6e; font-family: ui-monospace, 'SF Mono', Menlo, monospace; }
+  /* Hide placeholder when an iframe/video is present */
+  .video-embed:has(iframe) .embed-placeholder,
+  .video-embed:has(video) .embed-placeholder { display: none; }
+
+  /* Bio */
+  .bio {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 28px;
+    align-items: start;
+    margin-top: 36px;
+    padding: 0 8px;
+  }
+  .avatar {
+    width: 180px; height: 180px; border-radius: 50%;
+    box-shadow: 0 0 0 1px var(--line), 0 0 0 6px #fff, 0 1px 6px rgba(0,0,0,0.08);
+    position: relative;
+    overflow: hidden;
+    background: #ddd;
+  }
+  .avatar img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .bio p {
+    margin: 0 0 14px;
+    color: #3a3a3a;
+    font-size: 16px;
+    line-height: 1.55;
+    max-width: 52ch;
+  }
+  .bio .read-link {
+    color: var(--link);
+    text-decoration: underline;
+    cursor: pointer;
+    font-weight: 500;
+  }
+  .bio .read-link:hover { color: #4a30a8; }
+  .bio .note {
+    font-size: 14.5px;
+    color: #6a6a6a;
+    font-style: italic;
+    border-left: 2px solid var(--red);
+    padding-left: 14px;
+    margin-top: 18px;
+  }
+  .bio .note strong { color: var(--red); font-style: normal; font-weight: 700; letter-spacing: 0.02em; }
+
+  /* Transcript */
+  .transcript {
+    margin-top: 18px;
+    padding: 18px 20px;
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--red);
+    background: #fafafa;
+    border-radius: 4px;
+    display: none;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #333;
+  }
+  .transcript.open { display: block; }
+  .transcript h4 { margin: 0 0 10px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 600; }
+  .transcript p { margin: 0 0 10px; }
+
+  /* ========== OFERTA ========== */
+  .offer { margin: 56px 0 8px; text-align: center; }
+  .offer-hero { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+  .product-shot {
+    width: 100%; max-width: 420px;
+    background: transparent;
+  }
+  .product-shot img { width: 100%; height: auto; display: block; }
+  .product-shot svg { width: 100%; height: 100%; display: block; }
+  .price-block { display: flex; flex-direction: column; align-items: center; gap: 2px; margin-top: 4px; }
+  .only-label { color: #2aa84a; font-style: italic; font-weight: 600; font-size: 18px; }
+  .price { color: #2aa84a; font-weight: 800; font-size: 38px; line-height: 1; letter-spacing: -0.02em; }
+  .price .cents { font-size: 28px; vertical-align: 2px; font-weight: 700; }
+
+  .cta {
+    display: inline-flex; align-items: center; justify-content: center;
+    gap: 12px;
+    background: linear-gradient(180deg, #ffb84a 0%, #ee9320 100%);
+    color: #1a1a1a;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 18px;
+    padding: 16px 28px;
+    border-radius: 4px;
+    border: 1px solid #c97a14;
+    box-shadow: 0 2px 0 rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.5);
+    text-shadow: 0 1px 0 rgba(255,255,255,0.4);
+    min-width: 280px;
+    transition: transform 0.12s ease, filter 0.12s ease;
+  }
+  .cta:hover { filter: brightness(1.05); transform: translateY(-1px); }
+  .cta:active { transform: translateY(1px); box-shadow: 0 0 0 rgba(0,0,0,0.12); }
+  .cta-arrow { font-size: 22px; font-weight: 800; }
+  .cta-link {
+    color: #6b4cd6; text-decoration: underline; font-weight: 500; font-size: 14px;
+    display: inline-block; margin-top: 2px;
+  }
+  .cta-link:hover { color: #4a30a8; }
+
+  .guarantee-badge {
+    display: inline-flex; align-items: center; gap: 10px;
+    margin-top: 6px;
+    padding: 8px 14px;
+    border: 1px solid #cfcfcf;
+    border-radius: 4px;
+    background: #fafafa;
+  }
+  .guarantee-badge .shield { width: 24px; height: 24px; }
+  .guarantee-badge .shield svg { width: 100%; height: 100%; }
+  .guarantee-text { text-align: left; line-height: 1.1; }
+  .g-line1 { font-weight: 800; color: #1a1a1a; font-size: 12px; letter-spacing: 0.06em; }
+  .g-line2 { font-weight: 700; color: #2aa84a; font-size: 10px; letter-spacing: 0.08em; }
+
+  .bonus-title {
+    margin: 44px 0 22px;
+    text-align: center;
+    font-size: 22px;
+    font-weight: 700;
+    color: #1a1a1a;
+    text-wrap: balance;
+  }
+  .bonus-list { display: flex; flex-direction: column; gap: 28px; text-align: left; }
+  .bonus {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: 22px;
+    align-items: start;
+  }
+  .bonus-body h3 { margin: 0 0 8px; color: var(--red); font-size: 18px; font-weight: 700; }
+  .bonus-body p { margin: 0; color: #3a3a3a; font-size: 15px; line-height: 1.55; }
+
+  /* Book covers */
+  .book {
+    width: 130px; height: 170px;
+    position: relative;
+    border-radius: 2px 4px 4px 2px;
+    overflow: hidden;
+  }
+  .book img { width: 100%; height: 100%; object-fit: contain; display: block; }
+  .book-spine {
+    position: absolute; left: 0; top: 0; bottom: 0; width: 6px;
+    background: linear-gradient(90deg, rgba(0,0,0,0.5), rgba(0,0,0,0.1));
+  }
+  .book-front {
+    position: absolute; inset: 0 0 0 6px;
+    display: flex; flex-direction: column; align-items: center; padding: 10px 8px;
+    color: #fff;
+    text-align: center;
+  }
+  .book-1 .book-front { background: linear-gradient(180deg, #c78a3c 0%, #6b3d10 100%); }
+  .book-2 .book-front { background: linear-gradient(180deg, #1a2a5e 0%, #06112e 100%); }
+  .book-3 .book-front { background: linear-gradient(180deg, #6b3d10 0%, #2a1808 100%); }
+  .bf-top { font-size: 9px; letter-spacing: 0.18em; font-weight: 700; opacity: 0.85; margin-bottom: 6px; }
+  .bf-art, .bf-eye, .bf-script { width: 80%; aspect-ratio: 1; margin: 2px 0; }
+  .bf-eye { aspect-ratio: 1; width: 60%; }
+  .bf-art svg, .bf-eye svg, .bf-script svg { width: 100%; height: 100%; display: block; }
+  .bf-title { font-family: Georgia, serif; font-style: italic; font-weight: 700; font-size: 15px; line-height: 1.05; margin-top: auto; }
+  .bf-author { font-size: 8px; letter-spacing: 0.1em; opacity: 0.8; margin-top: 4px; text-transform: uppercase; }
+
+  .seal { width: 200px; margin: 40px auto 28px; }
+  .seal img { width: 100%; height: auto; display: block; }
+  .seal svg { width: 100%; height: 100%; display: block; }
+
+  .secret-title {
+    text-align: center;
+    font-size: 22px;
+    font-weight: 700;
+    color: #1a1a1a;
+    text-wrap: balance;
+    margin: 0 0 22px;
+    line-height: 1.3;
+  }
+  .secret-title em { font-style: normal; font-weight: 600; color: #3a3a3a; font-size: 19px; }
+  .secret-title u { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 2px; color: var(--red); }
+
+  .product-wide { width: 100%; max-width: 620px; margin: 0 auto 36px; }
+  .product-wide img { width: 100%; height: auto; display: block; }
+  .product-wide svg { width: 100%; height: auto; display: block; }
+
+  .closer { font-size: 20px; font-weight: 700; color: #1a1a1a; margin: 6px 0 6px; text-wrap: balance; }
+  .closer-price { color: #2aa84a; font-weight: 800; font-size: 34px; line-height: 1; margin-bottom: 18px; }
+  .closer-price .cents { font-size: 24px; vertical-align: 2px; }
+
+  /* Footer */
+  .footer {
+    background: var(--footer);
+    color: #cdb9ff;
+    padding: 28px 16px;
+    text-align: center;
+    font-size: 13px;
+    line-height: 1.6;
+    margin-top: auto;
+  }
+  .footer a { color: #b7a1f0; text-decoration: underline; }
+  .footer .links { margin-bottom: 8px; }
+  .footer .links span { color: #5e5e7a; margin: 0 6px; }
+  .footer .disclaimer { color: #8a8aa8; max-width: 760px; margin: 0 auto; }
+
+  /* Pointer arrows (emoji-free hand drawing) */
+  .pointer {
+    display: inline-block; width: 22px; height: 22px; vertical-align: -5px;
+    margin: 0 8px;
+  }
+
+  @media (max-width: 720px) {
+    .headline { font-size: 22px; }
+    .subhead { font-size: 16px; }
+    .bio { grid-template-columns: 1fr; justify-items: center; text-align: center; }
+    .bio p { max-width: none; }
+    .avatar { width: 150px; height: 150px; }
+    .bonus { grid-template-columns: 1fr; justify-items: center; text-align: center; }
+    .bonus-body { text-align: center; }
+    .price { font-size: 32px; }
+    .cta { min-width: auto; width: 100%; font-size: 16px; padding: 14px 20px; }
+    .bonus-title, .secret-title { font-size: 19px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <main class="container">
+    <h1 class="headline">
+      Tap The Play Button To Watch <u>This Secret Millionaire's Final Message</u> (And Use The 7-Sec Secret for Wealth)
+    </h1>
+    <div class="subhead">
+      <svg class="pointer" viewBox="0 0 24 24" fill="#f5b400" xmlns="http://www.w3.org/2000/svg"><path d="M12 2a2 2 0 0 0-2 2v8.6L8.7 11.3a2 2 0 1 0-2.8 2.8l5.4 5.4a2 2 0 0 0 2.8 0l5.4-5.4a2 2 0 1 0-2.8-2.8L14 12.6V4a2 2 0 0 0-2-2Z"/></svg>
+      Press The Play Button Below
+      <svg class="pointer" viewBox="0 0 24 24" fill="#f5b400" xmlns="http://www.w3.org/2000/svg"><path d="M12 2a2 2 0 0 0-2 2v8.6L8.7 11.3a2 2 0 1 0-2.8 2.8l5.4 5.4a2 2 0 0 0 2.8 0l5.4-5.4a2 2 0 1 0-2.8-2.8L14 12.6V4a2 2 0 0 0-2-2Z"/></svg>
+    </div>
+
+    <div class="video-embed" id="video">
+      <!-- COLOQUE AQUI O EMBED DO VÍDEO (ex.: <iframe src="..." allow="autoplay"></iframe>) -->
+      <div class="embed-placeholder">
+        <div class="ph-icon">▶</div>
+        <div class="ph-text">Insert video embed here</div>
+        <div class="ph-sub">Paste your &lt;iframe&gt; inside this container</div>
+      </div>
+    </div>
+
+    <section class="bio">
+      <div class="avatar" aria-label="Portrait">
+        <img src="assets/danny.png" alt="Danny Kelly" />
+      </div>
+      <div>
+        <p>My name is Danny Kelly, and I've kept this secret my entire life. Now, it's my hope that revealing this secret for wealth and abundance will change your life, and in turn, make the world a better place. I'm honored to share this with you :).</p>
+      </div>
+    </section>
+
+    <!-- ============ OFERTA ============ -->
+    <section class="offer">
+      <div class="offer-hero">
+        <div class="product-shot" aria-label="Last Wish Product">
+          <img src="assets/produto.png" alt="Last Wish — Abundance Program" />
+        </div>
+
+        <div class="price-block">
+          <div class="only-label">Only</div>
+          <div class="price">$12<span class="cents">,90</span></div>
+        </div>
+
+        <a href="#buy" class="cta">
+          <span class="cta-text">Attract Wealth And Abundance</span>
+          <span class="cta-arrow" aria-hidden="true">›</span>
+        </a>
+        <a href="#buy" class="cta-link">Click Here To Attract Wealth And Abundance</a>
+
+        <div class="guarantee-badge">
+          <span class="shield" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5l-8-3z" fill="#2aa84a"/><path d="m9.5 12.5 2 2 4-4" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          <div class="guarantee-text">
+            <div class="g-line1">365 DAYS</div>
+            <div class="g-line2">MONEY-BACK GUARANTEE</div>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="bonus-title">Get Three FREE GIFTS When You Join Today:</h2>
+
+      <div class="bonus-list">
+        <div class="bonus">
+        <div class="book book-1" aria-hidden="true">
+          <img src="assets/livro1.png" alt="The Official Last Wish Guide" />
+        </div>
+          <div class="bonus-body">
+            <h3>Gift #1: The Official Last Wish Guide</h3>
+            <p>In this quick guide, I share how to get the most out of the Last Wish recordings, which will help you attract wealth and abundance even faster. Just follow the simple steps in this guide and you'll be on the fast track to attracting the wealth and abundance you deserve.</p>
+          </div>
+        </div>
+
+        <div class="bonus">
+        <div class="book book-2" aria-hidden="true">
+          <img src="assets/livro2.png" alt="Pineal Gland — Decalcification Plan" />
+        </div>
+          <div class="bonus-body">
+            <h3>Gift #2: The Pineal Gland Decalcification Plan</h3>
+            <p>Calcification of the pineal gland can slow your progress toward wealth and abundance. In this simple guide I share a few easy steps to speed up decalcification. This will help you attract wealth and abundance.</p>
+          </div>
+        </div>
+
+        <div class="bonus">
+        <div class="book book-3" aria-hidden="true">
+          <img src="assets/livro3.png" alt="Wealth Scripts — Mental Programming" />
+        </div>
+          <div class="bonus-body">
+            <h3>Gift #3: The Wealth Scripts</h3>
+            <p>The Wealth Scripts help you attract wealth even faster by rewriting your subconscious to automatically gravitate toward money. Just listen to these scripts while you play the Last Wish recordings to accelerate your results.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="seal" aria-label="365 days, 100% money-back guarantee">
+        <img src="assets/garantia.png" alt="365 Days — 100% Money-Back Guarantee" />
+      </div>
+
+      <h2 class="secret-title">
+        This Is The Secret To Wealth And Abundance
+        <br/><em>That They <u>Didn't</u> Want You To Know</em>
+      </h2>
+
+      <div class="product-wide" aria-label="Full product">
+        <img src="assets/produto.png" alt="Last Wish — Full Program" />
+      </div>
+
+      <h2 class="closer">Start Attracting Wealth And Abundance Today For Just:</h2>
+      <div class="closer-price">$12<span class="cents">,90</span></div>
+
+      <a href="#buy" class="cta">
+        <span class="cta-text">Attract Wealth And Abundance</span>
+        <span class="cta-arrow" aria-hidden="true">›</span>
+      </a>
+      <a href="#buy" class="cta-link">Click Here To Attract Wealth And Abundance</a>
+
+      <div class="guarantee-badge">
+        <span class="shield" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5l-8-3z" fill="#2aa84a"/><path d="m9.5 12.5 2 2 4-4" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <div class="guarantee-text">
+          <div class="g-line1">365 DAYS</div>
+          <div class="g-line2">MONEY-BACK GUARANTEE</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="links">
+      <a href="#terms">Terms And Conditions</a>
+      <span>|</span>
+      <a href="#privacy">Privacy Policy</a>
+    </div>
+    <div class="disclaimer">
+      This site is not a part of the Facebook website or Facebook Inc. Additionally, This site is NOT endorsed by Facebook in any way. FACEBOOK is a trademark of FACEBOOK, Inc.
+    </div>
+  </footer>
+</div>
+</body>
+</html>
