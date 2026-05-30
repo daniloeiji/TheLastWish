@@ -439,6 +439,17 @@
     </section>
   </main>
 
+  <script>
+    (function () {
+      var offer = document.querySelector('.offer');
+      offer.style.display = 'none';
+      setTimeout(function () {
+        offer.style.display = '';
+        offer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 23 * 60 * 1000);
+    })();
+  </script>
+
   <footer class="footer">
     <div class="links">
       <a href="#terms">Terms And Conditions</a>
